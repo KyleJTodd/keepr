@@ -12,29 +12,29 @@ namespace Keepr.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class KeepsController : ControllerBase
+  public class VaultsController : ControllerBase
   {
-    private readonly KeepRepository _repo;
-    public KeepsController(KeepRepository repo)
+    private readonly VaultRepository _repo;
+    public VaultsController(VaultRepository repo)
     {
       _repo = repo;
     }
     // GET api/teams
     [HttpGet]
-    public ActionResult<IEnumerable<Keep>> Get()
-    {
-      try
-      {
-        return Ok(_repo.GetAll());
-      }
-      catch (Exception e)
-      {
-        return BadRequest(e);
-      }
-    }
+    // public ActionResult<IEnumerable<Vault>> Get()
+    // {
+    //   try
+    //   {
+    //     return Ok(_repo.GetAll());
+    //   }
+    //   catch (Exception e)
+    //   {
+    //     return BadRequest(e);
+    //   }
+    // }
     [Authorize]
     [HttpGet("user")]
-    public ActionResult<IEnumerable<Keep>> GetByUser()
+    public ActionResult<IEnumerable<Vault>> GetByUser()
     {
       try
       {
@@ -49,7 +49,7 @@ namespace Keepr.Controllers
 
     // GET api/teams/5
     [HttpGet("{id}")]
-    public ActionResult<Keep> Get(int id)
+    public ActionResult<Vault> Get(int id)
     {
       try
       {
@@ -61,10 +61,10 @@ namespace Keepr.Controllers
       }
     }
 
-    // POST api/keeps
+    // POST api/Vaults
     [Authorize]
     [HttpPost]
-    public ActionResult<Keep> Post([FromBody] Keep value)
+    public ActionResult<Vault> Post([FromBody] Vault value)
     {
       try
       {
@@ -78,10 +78,10 @@ namespace Keepr.Controllers
       }
     }
 
-    // PUT api/keeps/5
+    // PUT api/Vaults/5
     [Authorize]
     [HttpPut("{id}")]
-    public ActionResult<Keep> Put(int id, [FromBody] Keep value)
+    public ActionResult<Vault> Put(int id, [FromBody] Vault value)
     {
       try
       {
