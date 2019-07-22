@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Keepr.Models;
 using Keepr.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace canadiansportsball.Controllers
@@ -30,12 +32,14 @@ namespace canadiansportsball.Controllers
         return BadRequest(e);
       }
     }
+    [Authorize]
     [HttpGet("user")]
-    public ActionResult<IEnumerable<Keep>> GetByUser(string id)
+    public ActionResult<IEnumerable<Keep>> GetByUser()
     {
       try
       {
-        return Ok(_repo.GetByUserId(id));
+        var userid = HttpContext.User.FindFirstValue("Id"); // THIS IS HOW YOU GET THE ID of the currently logged in user
+        return Ok(_repo.GetByUserId(userid));
       }
       catch (Exception e)
       {
@@ -57,12 +61,15 @@ namespace canadiansportsball.Controllers
       }
     }
 
-    // POST api/teams
+    // POST api/keeps
+    [Authorize]
     [HttpPost]
     public ActionResult<Keep> Post([FromBody] Keep value)
     {
       try
       {
+        var id = HttpContext.User.FindFirstValue("Id"); // THIS IS HOW YOU GET THE ID of the currently logged in user
+        value.UserId = id;
         return Ok(_repo.Create(value));
       }
       catch (Exception e)
@@ -71,12 +78,15 @@ namespace canadiansportsball.Controllers
       }
     }
 
-    // PUT api/teams/5
+    // PUT api/keeps/5
+    [Authorize]
     [HttpPut("{id}")]
     public ActionResult<Keep> Put(int id, [FromBody] Keep value)
     {
       try
       {
+        var userid = HttpContext.User.FindFirstValue("Id"); // THIS IS HOW YOU GET THE ID of the currently logged in user
+        value.UserId = userid;
         value.Id = id;
         return Ok(_repo.Update(value));
       }
@@ -87,17 +97,17 @@ namespace canadiansportsball.Controllers
     }
 
     // DELETE api/teams/5
-    [HttpDelete("{id}")]
-    public ActionResult<string> Delete(int id)
-    {
-      try
-      {
-        return Ok(_repo.Delete(id));
-      }
-      catch (Exception e)
-      {
-        return BadRequest(e);
-      }
-    }
+    // [HttpDelete("{id}")]
+    // public ActionResult<string> Delete(int id)
+    // {
+    //   try
+    //   {
+    //     return Ok(_repo.Delete(id));
+    //   }
+    //   catch (Exception e)
+    //   {
+    //     return BadRequest(e);
+    //   }
+    // }
   }
 }

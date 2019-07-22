@@ -39,8 +39,8 @@ namespace Keepr.Repositories
     public Keep Create(Keep value)
     {
       string query = @"
-            INSERT INTO keeps (name, description, img, isPrivate)
-            VALUES (@Name, @Description, @Img, @IsPrivate);
+            INSERT INTO keeps (name, description, img, isPrivate, userId)
+            VALUES (@Name, @Description, @Img, @IsPrivate, @UserId);
             SELECT LAST_INSERT_ID();
             ";
       int id = _db.ExecuteScalar<int>(query, value);
@@ -48,7 +48,7 @@ namespace Keepr.Repositories
       return value;
     }
 
-    internal object Update(Keep value)
+    public Keep Update(Keep value)
     {
       string query = @"
             UPDATE keeps 
@@ -61,7 +61,7 @@ namespace Keepr.Repositories
             shares = @Shares,
             keeps = @Keeps
             WHERE id = @Id ;
-            SELECT * FROM players WHERE id = @Id;
+            SELECT * FROM keeps WHERE id = @Id;
            ";
       return _db.QueryFirstOrDefault<Keep>(query, value);
     }
