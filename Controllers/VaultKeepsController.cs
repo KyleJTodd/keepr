@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Keepr.Models;
 using Keepr.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Keepr.Controllers
@@ -32,12 +34,15 @@ namespace Keepr.Controllers
     // }
 
     // GET api/vaultkeeps/5
-    [HttpGet("{id}")]
-    public ActionResult<VaultKeep> Get(int id)
+    [Authorize]
+    [HttpGet("{vaultId}")]
+    public ActionResult<IEnumerable<Keep>> Get(int vaultId)
     {
       try
       {
-        return Ok(_repo.GetKeepsByVaultId(id));
+        var userId = HttpContext.User.FindFirstValue("Id"); // THIS IS HOW YOU GET THE ID of the currently logged in user
+
+        return Ok(_repo.GetKeepsByVaultId(vaultId, userId));
       }
       catch (Exception e)
       {
@@ -46,11 +51,14 @@ namespace Keepr.Controllers
     }
 
     // POST api/teams
+    [Authorize]
     [HttpPost]
     public ActionResult<VaultKeep> Post([FromBody] VaultKeep value)
     {
       try
       {
+        var userId = HttpContext.User.FindFirstValue("Id");
+        value.UserId = userId;
         return Ok(_repo.Create(value));
       }
       catch (Exception e)
@@ -60,29 +68,32 @@ namespace Keepr.Controllers
     }
 
     // PUT api/teams/5
-    [HttpPut("{id}")]
-    public ActionResult<VaultKeep> Put(int id, [FromBody] VaultKeep value)
-    {
-      try
-      {
-        value.Id = id;
-        //evaluate and determine winner
+    // [HttpPut("{id}")]
+    // public ActionResult<VaultKeep> Put(int id, [FromBody] VaultKeep value)
+    // {
+    //   try
+    //   {
+    //     value.Id = id;
+    //     //evaluate and determine winner
 
-        return Ok(_repo.Update(value));
-      }
-      catch (Exception e)
-      {
-        return BadRequest(e);
-      }
-    }
+    //     return Ok(_repo.Update(value));
+    //   }
+    //   catch (Exception e)
+    //   {
+    //     return BadRequest(e);
+    //   }
+    // }
 
     // DELETE api/teams/5
-    [HttpDelete("{id}")]
-    public ActionResult<string> Delete(int id)
+    [Authorize]
+    [HttpPut]
+    public ActionResult<string> Delete(VaultKeep value)
     {
       try
       {
-        return Ok(_repo.Delete(id));
+        var userId = HttpContext.User.FindFirstValue("Id");
+        value.UserId = userId;
+        return Ok(_repo.Delete(value));
       }
       catch (Exception e)
       {

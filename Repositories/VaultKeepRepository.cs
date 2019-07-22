@@ -20,14 +20,15 @@ namespace Keepr.Repositories
     //   return _db.Query<VaultKeep>("SELECT * FROM vaultkeeps");
     // }
 
-    public IEnumerable<VaultKeep> GetKeepsByVaultId(int id)
+    public IEnumerable<Keep> GetKeepsByVaultId(int vaultId, string userId)
     {
-      string query = @"SELECT * FROM vaultkeeps vk 
+      string query = @"
+      SELECT * FROM vaultkeeps vk 
       INNER JOIN keeps k ON k.id = vk.keepId
-      WHERE (vaultId = @vaultId AND vk.userId = @userId";
-      VaultKeep data = _db.QueryFirstOrDefault<VaultKeep>(query, new { id });
+      WHERE (vaultId = @vaultId AND vk.userId = @userId)";
+      IEnumerable<Keep> data = _db.Query<Keep>(query, new { vaultId, userId });
       if (data == null) throw new Exception("Invalid ID");
-      return _db.Query<VaultKeep>(query, new { id });
+      return data;
     }
     // public IEnumerable<VaultKeep> GetKeepsByVaultId(string id)
     // {
@@ -63,10 +64,11 @@ namespace Keepr.Repositories
     //   return _db.QueryFirstOrDefault<Vault>(query, value);
     // }
 
-    internal object Delete(int id)
+    public string Delete(VaultKeep value)
     {
-      string query = "DELETE FROM vaultkeeps WHERE id = @Id;";
-      int changedRows = _db.Execute(query, new { id });
+      string query = @"DELETE FROM vaultkeeps 
+      WHERE (vaultId = @VaultId AND keepId = @KeepId AND userId = @UserId);";
+      int changedRows = _db.Execute(query, value);
       if (changedRows < 1) throw new Exception("Invalid Id");
       return "Successfully Deleted VaultKeep";
     }

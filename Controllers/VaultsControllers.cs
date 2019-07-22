@@ -48,6 +48,7 @@ namespace Keepr.Controllers
     }
 
     // GET api/teams/5
+    [Authorize]
     [HttpGet("{id}")]
     public ActionResult<Vault> Get(int id)
     {
