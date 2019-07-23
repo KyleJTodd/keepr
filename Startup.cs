@@ -72,6 +72,7 @@ namespace Keepr
     {
       var connection = new MySqlConnection(_connectionString);
       connection.Open();
+
       return connection;
     }
 
