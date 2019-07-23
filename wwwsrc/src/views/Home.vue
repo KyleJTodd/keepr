@@ -3,17 +3,31 @@
     <navbar></navbar>
     <h1>{{user.username}}'s Dashboard</h1>
     <div class="row">
-      <div class="col-4">
+      <div class="col-12">
         <button @click="hideForm = !hideForm">Create New Vault</button>
         <form v-if="hideForm" @submit.prevent="createVault">
-          <input type="text" placeholder="New Vault Name">
-          <input type="text" placeholder="New Vault Description">
+          <input type="text" v-model="newVault.name" placeholder="New Vault Name">
+          <br>
+          <input type="text" v-model="newVault.description" placeholder="New Vault Description">
           <br>
           <button class="btn btn-info">Create</button>
         </form>
       </div>
-
     </div>
+    <div class="row">
+      <div class="offset-1 col-10">
+        <div v-for="vault in vaults">
+          <div class="jumbotron">
+            <h1 class="display-12">{{vault.name}}</h1>
+            <p class="lead">{{vault.description}}</p>
+            <hr class="my-12">
+            <p>Delete</p>
+            <a class="btn btn-primary" href="#" role="button">View Vault</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 
@@ -29,19 +43,33 @@
     name: "home",
     data() {
       return {
-        hideForm: false
+        hideForm: false,
+        newVault: {
+          name: "",
+          description: ""
+        }
       }
+    },
+    mounted() {
+      this.$store.dispatch('getVaults')
     },
     computed: {
       user() {
         return this.$store.state.user;
+      },
+      vaults() {
+        return this.$store.state.vaults;
       }
     },
     methods: {
       logout() {
         this.$store.dispatch("logout");
+      },
+      createVault() {
+        this.$store.dispatch("createVault", this.newVault)
       }
     },
+
     components: {
       Navbar
     }
