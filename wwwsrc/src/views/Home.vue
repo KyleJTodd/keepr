@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-12">
         <button @click="hideForm = !hideForm">Create New Vault</button>
-        <form v-if="hideForm" @submit.prevent="createVault">
+        <form v-if="hideForm" @submit.prevent="createVault(); hideForm = !hideForm">
           <input type="text" v-model="newVault.name" placeholder="New Vault Name">
           <br>
           <input type="text" v-model="newVault.description" placeholder="New Vault Description">
@@ -16,13 +16,15 @@
     </div>
     <div class="row">
       <div class="offset-1 col-10">
-        <div v-for="vault in vaults">
+        <div v-for="vault in vaults" v-bind:vault="vault">
           <div class="jumbotron">
             <h1 class="display-12">{{vault.name}}</h1>
             <p class="lead">{{vault.description}}</p>
             <hr class="my-12">
-            <p>Delete</p>
             <a class="btn btn-primary" href="#" role="button">View Vault</a>
+            <br>
+            <br>
+            <p><button class="btn btn-danger" @click="deleteVault(vault.id)">Delete</button></p>
           </div>
         </div>
       </div>
@@ -67,6 +69,10 @@
       },
       createVault() {
         this.$store.dispatch("createVault", this.newVault)
+      },
+      deleteVault(vaultId) {
+
+        this.$store.dispatch('deleteVault', vaultId)
       }
     },
 
