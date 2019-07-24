@@ -21,7 +21,7 @@
             <h1 class="display-12">{{vault.name}}</h1>
             <p class="lead">{{vault.description}}</p>
             <hr class="my-12">
-            <a class="btn btn-primary" href="#" role="button">View Vault</a>
+            <a class="btn btn-primary" href="#" role="button" @click="goToVault(vault.id)">View Vault</a>
             <br>
             <br>
             <p><button class="btn btn-danger" @click="deleteVault(vault.id)">Delete</button></p>
@@ -71,8 +71,10 @@
         this.$store.dispatch("createVault", this.newVault)
       },
       deleteVault(vaultId) {
-
         this.$store.dispatch('deleteVault', vaultId)
+      },
+      goToVault(vaultId) {
+        this.$store.dispatch('goToVault', vaultId)
       }
     },
 
