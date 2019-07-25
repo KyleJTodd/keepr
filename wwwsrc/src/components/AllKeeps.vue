@@ -8,7 +8,7 @@
           <h5 class="card-title">{{keep.name}}</h5>
           <p class="card-text">{{keep.description}}
           </p>
-          <a href="#" class="btn btn-primary">Add to Vault</a>
+
         </div>
       </div>
     </div>

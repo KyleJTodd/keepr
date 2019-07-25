@@ -37,7 +37,8 @@
                 <br>
                 <button class="btn btn-primary">Add To Vault</button>
               </form>
-              <a class="btn btn-danger" @click="deleteKeep(keep.id)">Delete</a>
+              <a v-if="user.id == keep.userId" class="btn btn-danger" @click="deleteKeep(keep.id)">Delete</a>
+              <a v-else></a>
             </div>
           </div>
         </div>
@@ -71,7 +72,7 @@
         this.$store.dispatch('deleteKeep', keepId)
       },
       addToVault(keepId) {
-        debugger
+
         let data = {
           vaultId: this.selected,
           keepId: keepId
@@ -87,6 +88,11 @@
       keeps() {
         return (
           this.$store.state.keeps
+        )
+      },
+      user() {
+        return (
+          this.$store.state.user
         )
       },
       vaults() {

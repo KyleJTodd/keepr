@@ -29,6 +29,25 @@
         </div>
       </div>
     </div>
+    <div class="row">
+
+      <h1 class="col-12 text-center">All of your created keeps</h1>
+      <div class="row">
+        <div v-for="userKeep in userKeeps">
+          <div class="card" style="width: 18rem;">
+            <img v-bind:src="userKeep.img" class="card-img-top" alt="Image">
+            <div class="card-body">
+              <h5 class="card-title">{{userKeep.name}}</h5>
+              <p class="card-text">{{userKeep.description}}
+              </p>
+              <a href="#" class="btn btn-danger" @click="deleteKeep(userKeep.id)">Delete?</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
   </div>
 
 
@@ -54,13 +73,21 @@
     },
     mounted() {
       this.$store.dispatch('getVaults')
+      this.$store.dispatch('getUserKeeps')
     },
+
     computed: {
       user() {
         return this.$store.state.user;
       },
       vaults() {
         return this.$store.state.vaults;
+      },
+      userKeeps() {
+        return this.$store.state.userKeeps;
+      },
+      keeps() {
+        return this.$store.state.keeps;
       }
     },
     methods: {
@@ -75,11 +102,17 @@
       },
       goToVault(vaultId) {
         this.$store.dispatch('goToVault', vaultId)
-      }
-    },
+      },
+      deleteKeep(keepId) {
 
+        this.$store.dispatch('deleteKeep', keepId)
+      },
+
+
+    },
     components: {
       Navbar
     }
-  };
+  }
+
 </script>
